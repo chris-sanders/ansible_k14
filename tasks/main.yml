@@ -68,6 +68,7 @@
     module: git
     repo: "{{ k14_helm_repo }}"
     dest: "{{ role_path }}/charts/{{ k14_app }}"
+    version: "{{ k14_helm_ref }}"
   run_once: true
   when: k14_helm_repo is defined
   register: chart_folder
