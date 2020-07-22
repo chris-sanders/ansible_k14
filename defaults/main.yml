@@ -1,5 +1,4 @@
 ---
-# defaults file for metallb
+# defaults file 
 k14_helm_values: helm-values.yaml
 k14_default_values: default-values.yaml
-k14_helm_ref: "HEAD"

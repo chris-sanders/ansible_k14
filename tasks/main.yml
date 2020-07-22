@@ -68,7 +68,7 @@
     module: git
     repo: "{{ k14_helm_repo }}"
     dest: "{{ role_path }}/charts/{{ k14_app }}"
-    version: "{{ k14_helm_ref }}"
+    version: "{{ k14_helm_ref | default('HEAD') }}"
   run_once: true
   when: k14_helm_repo is defined
   register: chart_folder
@@ -195,7 +195,7 @@
 
 - name: Register app namespace
   set_fact:
-      k14_app_namespace: "{{ vars['ytt'][k14_app]['namespace'] }}"
+      k14_app_namespace: "{{ vars['ytt'][k14_app.replace('-','_')]['namespace'] }}"
 
 - name: Debug k14_app_namespace
   debug: var=k14_app_namespace
