@@ -1,0 +1,8 @@
+- name: Check if helm overlay exists
+  stat:
+    path: "{{ app_folder.path }}/overlays/helm.yaml"
+  register: helm_overlay
+
+- name: Process ytt templates
+  shell: "{{ lookup('template', 'ytt-templates.sh') }}"
+

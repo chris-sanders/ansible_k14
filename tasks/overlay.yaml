@@ -1,0 +1,21 @@
+- name: Check if manifest overlay exists
+  stat:
+    path: "{{ app_folder.path }}/overlays/manifest.yaml"
+  register: manifest_overlay
+
+- name: Check if role manifest overlay exists
+  stat:
+    path: "{{ ansible_parent_role_paths[0] }}/files/overlays/manifest.yaml"
+  register: role_manifest_overlay
+
+- name: debug manifest_list
+  debug: var=k14_manifest_list
+  tags: [never,debug]
+
+- name: Apply manifest overlay
+  shell: "{{ lookup('template', 'ytt-overlay.sh') }}"
+  loop: "{{ k14_manifest_list.results }}"
+  loop_control:
+      loop_var: overlay_item
+      label: "{{ overlay_item.manifest_item.path }}"
+  when: overlay_item.manifest_item.state == 'file'

@@ -1,5 +1,5 @@
-{% set filename = item.item.src.split('/')[-1] %}
-ytt -f {{ item.item.src }} \
+{% set filename = overlay_item.manifest_item.src.split('/')[-1] %}
+ytt -f {{ overlay_item.manifest_item.src }} \
 {% if manifest_overlay.stat.exists: %}
     -f {{ manifest_overlay.stat.path }} \
 {% endif %}

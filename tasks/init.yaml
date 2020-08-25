@@ -1,0 +1,57 @@
+---
+- name: Check required variables
+  fail: msg="{{ init_item }} not provided"
+  when: vars[init_item] is undefined
+  loop:
+    - root_folder
+    - site_file
+    - k14_app
+  loop_control:
+      loop_var: "init_item"
+
+- name: Stat site_file
+  stat:
+      path: "{{ root_folder }}/{{ site_file }}"
+  register: stat_site_file
+
+- name: Break if site_file missing
+  fail: msg="site_file not found"
+  when: not stat_site_file.stat.exists
+
+- name: Create {{ k14_app }} folder
+  file:
+    path: "{{ root_folder }}/{{ k14_app }}"
+    state: directory
+    mode: 0774
+  register: app_folder
+
+- name: Remove existing folders
+  file:
+      path: "{{ remove_item }}"
+      state: absent
+  loop:
+      - "{{ app_folder.path }}/manifest" 
+      - "{{ app_folder.path }}/secrets" 
+  loop_control:
+      loop_var: "remove_item"
+
+- name: Create manifest folder
+  file:
+    path: "{{ app_folder.path }}/manifest"
+    state: directory
+    mode: 0774
+  register: manifest_folder
+
+- name: Create secrets folder
+  file:
+    path: "{{ app_folder.path }}/secrets"
+    state: directory
+    mode: 0774
+  register: secrets_folder
+
+- name: Create tmpfolder
+  tempfile:
+    state: directory
+    suffix: ".{{ k14_app }}"
+  register: tmp_folder
+

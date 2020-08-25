@@ -1,0 +1,17 @@
+- name: Generate helm manifest
+  shell: |
+      helm template {{ k14_app }} {{ role_path }}/charts/{{ k14_app }}/{{ k14_helm_path }} \
+      -f {{tmp_folder.path }}/ytt/{{ k14_helm_values }} \
+      -n {{ k14_app }} \
+      --include-crds \
+      --output-dir {{ tmp_folder.path }}/helm/
+
+- name: register manifest files
+  stat:
+      path: "{{ manifest_item }}" 
+  register: k14_manifest_list
+  loop: "{{ query('filetree', '{{ tmp_folder.path }}/helm/{{ k14_app }}') }}"
+  loop_control:
+      label: "{{ manifest_item.path }}"
+      loop_var: "manifest_item"
+  when: " manifest_item.state == 'file' "

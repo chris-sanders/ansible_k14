@@ -1,0 +1,50 @@
+#- name: Check if helm overlay exists
+#  stat:
+#    path: "{{ app_folder.path }}/overlays/helm.yaml"
+#  register: helm_overlay
+#
+- name: Check for sops encryption
+  lineinfile:
+    name: "{{ stat_site_file.stat.path }}"
+    regex: "^sops:"
+    state: absent
+  check_mode: yes
+  register: k14_sops
+
+- name: debug sops usage
+  debug: var=k14_sops.found
+  tags: [never, debug]
+
+- name: load sops site file
+  shell: |-
+      echo "#@data/values
+      #@overlay/match missing_ok=True
+      #@overlay/match-child-defaults missing_ok=True
+      ---
+      $(sops -d {{ stat_site_file.stat.path }})"
+  register: k14_site_file_sops
+  when: k14_sops.found
+
+- name: store decrypted site file in var
+  set_fact:
+      site_file_content: "{{ k14_site_file_sops.stdout }}"
+  when: k14_sops.found
+  
+- name: load plain site file
+  shell: |
+    echo "#@data/values
+    #@overlay/match missing_ok=True
+    #@overlay/match-child-defaults missing_ok=True
+    ---
+    $(cat {{ stat_site_file.stat.path }})"
+  register: k14_site_file_plain
+  when: not k14_sops.found
+
+- name: store plain text site file in var
+  set_fact:
+      site_file_content: "{{ k14_site_file_plain.stdout }}"
+  when: not k14_sops.found
+
+- name: debug site_file
+  debug: var=site_file_content
+  tags: [never, debug]
