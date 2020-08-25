@@ -1,0 +1,12 @@
+- name: Fix manifest permission
+  shell: |
+      chmod ugo-x,ug+rwX -R {{ app_folder.path }}/manifest/*
+  args:
+      warn: no
+
+- name: Fix secrets permission
+  shell: |
+      chmod ugo-x,ug+rwX {{ app_folder.path }}/secrets/*
+  args:
+      warn: no
+  when: k14_secrets_list.skipped is not defined

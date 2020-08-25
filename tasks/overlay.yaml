@@ -5,8 +5,12 @@
 
 - name: Check if role manifest overlay exists
   stat:
-    path: "{{ ansible_parent_role_paths[0] }}/files/overlays/manifest.yaml"
+    path: "{{ ansible_parent_role_paths[1] }}/files/overlays/manifest.yaml"
   register: role_manifest_overlay
+
+- name: debug role_manifest_overlay
+  debug: var=role_manifest_overlay
+  tags: [never,debug]
 
 - name: debug manifest_list
   debug: var=k14_manifest_list

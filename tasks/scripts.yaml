@@ -1,0 +1,39 @@
+- name: Generate jinja-vars
+  shell: "{{ lookup('template', 'ytt-jinja-vars.sh') }}"
+
+- name: Include jinja-vars into the 'ytt' variable
+  include_vars:
+    file: "{{ tmp_folder.path }}/jinja-vars.yaml"
+    name: ytt
+
+- name: Debug jinja-vars loading
+  debug: var=ytt
+  tags: [never, debug]
+
+- name: Register app namespace
+  set_fact:
+      k14_app_namespace: "{{ vars['ytt'][k14_app.replace('-','_')]['namespace'] }}"
+
+- name: Debug k14_app_namespace
+  debug: var=k14_app_namespace
+  tags: [never, debug]
+
+- name: Include site_file vars into the 'site_file' variable
+  include_vars:
+    file: "{{ stat_site_file.stat.path }}"
+    name: site_file_vars
+
+- name: debug site_file_vars
+  debug: var=site_file_vars
+  tags: [never, debug]
+
+- name: Render scripts
+  template:
+    src: "{{ role_path }}/templates/{{ script_item }}"
+    dest: "{{ app_folder.path }}"
+    mode: '0774'
+  loop:
+      - deploy.sh
+      - diff.sh
+  loop_control:
+      loop_var: "script_item"

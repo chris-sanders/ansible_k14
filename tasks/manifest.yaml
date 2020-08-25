@@ -1,0 +1,8 @@
+- name: Copy templates to manifest folder
+  shell: |
+      cp {{ ytt_item }} {{ app_folder.path }}/manifest/
+  loop: "{{ query('fileglob', '{{ tmp_folder.path }}/ytt/*') }}"
+  loop_control:
+      label: "{{ ytt_item.split('/')[-1] }}"
+      loop_var: "ytt_item"
+  when: not ytt_item is search("helm-values.yaml")
