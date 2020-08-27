@@ -1,26 +1,26 @@
 - name: Generate helm manifest from repo
   shell: |
-      helm template {{ k14_app }} {{ role_path }}/charts/{{ k14_app }}/{{ k14_helm_path | default() }} \
+      helm template {{ k14.app }} {{ role_path }}/charts/{{ k14.app }}/{{ k14.helm_path | default() }} \
       -f {{ tmp_folder.path }}/ytt/{{ k14_helm_values }} \
-      -n {{ k14_app }} \
+      -n {{ k14.app }} \
       --include-crds \
       --output-dir {{ tmp_folder.path }}/helm/
-  when: k14_helm_repo is defined
+  when: k14.helm_repo is defined
 
 - name: Generate helm manifest from chart
   shell: |
-      helm template {{ k14_app }} {{ tmp_folder.path }}/chart/{{ k14_app }}/{{ k14_helm_path | default() }} \
+      helm template {{ k14.app }} {{ tmp_folder.path }}/chart/{{ k14.app }}/{{ k14.helm_path | default() }} \
       -f {{ tmp_folder.path }}/ytt/{{ k14_helm_values }} \
-      -n {{ k14_app }} \
+      -n {{ k14.app }} \
       --include-crds \
       --output-dir {{ tmp_folder.path }}/helm/
-  when: k14_helm_server is defined
+  when: k14.helm_server is defined
 
 - name: register manifest files
   stat:
       path: "{{ manifest_item }}" 
   register: k14_manifest_list
-  loop: "{{ query('filetree', '{{ tmp_folder.path }}/helm/{{ k14_app }}') }}"
+  loop: "{{ query('filetree', '{{ tmp_folder.path }}/helm/{{ k14.app }}') }}"
   loop_control:
       label: "{{ manifest_item.path }}"
       loop_var: "manifest_item"

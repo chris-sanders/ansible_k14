@@ -3,7 +3,7 @@
       helm fetch \
       --destination {{ tmp_folder.path }}/chart/ \
       --untar \
-      {% if k14_helm_version is defined %}
-      --versoin {{ k14_helm_version }}
+      {% if k14.helm_version is defined %}
+      --versoin {{ k14.helm_version }}
       {% endif %}
-      --repo {{ k14_helm_server }} 
+      --repo {{ k14.helm_server }} 

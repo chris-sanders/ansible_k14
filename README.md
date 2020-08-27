@@ -121,9 +121,9 @@ Role Variables
 --------------
 Set the role variables in the defaults/main.yml file of your application role.
 
- * k14_app: The name of the application.
- * k14_helm_repo: The URL for the git repo
- * k14_helm_path: Path within the helm_repo to the chart
+ * k14.app: The name of the application.
+ * k14.helm_repo: The URL for the git repo
+ * k14.helm_path: Path within the helm_repo to the chart
 
 Main Task
 ---------

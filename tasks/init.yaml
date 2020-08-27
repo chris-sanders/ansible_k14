@@ -5,7 +5,7 @@
   loop:
     - root_folder
     - site_file
-    - k14_app
+    - k14
   loop_control:
       loop_var: "init_item"
 
@@ -18,9 +18,9 @@
   fail: msg="site_file not found"
   when: not stat_site_file.stat.exists
 
-- name: Create {{ k14_app }} folder
+- name: Create {{ k14.app }} folder
   file:
-    path: "{{ root_folder }}/{{ k14_app }}"
+    path: "{{ root_folder }}/{{ k14.app }}"
     state: directory
     mode: 0774
   register: app_folder
@@ -52,6 +52,6 @@
 - name: Create tmpfolder
   tempfile:
     state: directory
-    suffix: ".{{ k14_app }}"
+    suffix: ".{{ k14.app }}"
   register: tmp_folder
 

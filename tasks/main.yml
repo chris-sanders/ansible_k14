@@ -1,106 +1,106 @@
 ---
-- name: Init {{ k14_app }}
+- name: Init {{ k14.app }}
   include_role:
       name: k14
       tasks_from: init
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
 
-- name: Pull {{ k14_app }} chart
+- name: Pull {{ k14.app }} chart
   include_role:
       name: k14
       tasks_from: chart
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
-  when: k14_helm_repo is defined
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
+  when: k14.helm_repo is defined
 
-- name: Download {{ k14_app }} chart
+- name: Download {{ k14.app }} chart
   include_role:
       name: k14
       tasks_from: chart-download
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
-  when: k14_helm_server is defined
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
+  when: k14.helm_server is defined
 
 
 # public - site_file_contents used in later tasks
-- name: Load site file for {{ k14_app }}
+- name: Load site file for {{ k14.app }}
   include_role:
       name: k14
       tasks_from: site-file
       public: yes
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
 
-- name: Process {{ k14_app }} secrets
+- name: Process {{ k14.app }} secrets
   include_role:
       name: k14
       tasks_from: process-secrets
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
 
-- name: Process {{ k14_app }} templates
+- name: Process {{ k14.app }} templates
   include_role:
       name: k14
       tasks_from: process-templates
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
 
 # public - k14_manifest_list is used later and provided by the helm task
-- name: Generate {{ k14_app }} helm template
+- name: Generate {{ k14.app }} helm template
   include_role:
       name: k14
       tasks_from: process-helm
       public: yes
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
 
-- name: Apply {{ k14_app }} overlay
+- name: Apply {{ k14.app }} overlay
   include_role:
       name: k14
       tasks_from: overlay
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
 
-- name: Setup {{ k14_app }} manifest folder
+- name: Setup {{ k14.app }} manifest folder
   include_role:
       name: k14
       tasks_from: manifest
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
 
-- name: Setup {{ k14_app }} manifest folder
+- name: Setup {{ k14.app }} manifest folder
   include_role:
       name: k14
       tasks_from: permissions
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
 
-- name: Write {{ k14_app }} scripts
+- name: Write {{ k14.app }} scripts
   include_role:
       name: k14
       tasks_from: scripts
       apply:
           tags:
-              - "{{ k14_app }}"
-  tags: "{{ k14_app }}"
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"

@@ -12,10 +12,10 @@
 
 - name: Register app namespace
   set_fact:
-      k14_app_namespace: "{{ vars['ytt'][k14_app.replace('-','_')]['namespace'] }}"
+      k14_app_namespace: "{{ vars['ytt'][k14.app.replace('-','_')]['namespace'] }}"
 
-- name: Debug k14_app_namespace
-  debug: var=k14_app_namespace
+- name: Debug k14.app_namespace
+  debug: var=k14.app_namespace
   tags: [never, debug]
 
 - name: Include site_file vars into the 'site_file' variable
