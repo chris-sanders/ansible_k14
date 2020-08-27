@@ -8,7 +8,7 @@
               - "{{ k14_app }}"
   tags: "{{ k14_app }}"
 
-- name: Update {{ k14_app }} chart
+- name: Pull {{ k14_app }} chart
   include_role:
       name: k14
       tasks_from: chart
@@ -16,6 +16,18 @@
           tags:
               - "{{ k14_app }}"
   tags: "{{ k14_app }}"
+  when: k14_helm_repo is defined
+
+- name: Download {{ k14_app }} chart
+  include_role:
+      name: k14
+      tasks_from: chart-download
+      apply:
+          tags:
+              - "{{ k14_app }}"
+  tags: "{{ k14_app }}"
+  when: k14_helm_server is defined
+
 
 # public - site_file_contents used in later tasks
 - name: Load site file for {{ k14_app }}

@@ -1,10 +1,20 @@
-- name: Generate helm manifest
+- name: Generate helm manifest from repo
   shell: |
-      helm template {{ k14_app }} {{ role_path }}/charts/{{ k14_app }}/{{ k14_helm_path }} \
-      -f {{tmp_folder.path }}/ytt/{{ k14_helm_values }} \
+      helm template {{ k14_app }} {{ role_path }}/charts/{{ k14_app }}/{{ k14_helm_path | default() }} \
+      -f {{ tmp_folder.path }}/ytt/{{ k14_helm_values }} \
       -n {{ k14_app }} \
       --include-crds \
       --output-dir {{ tmp_folder.path }}/helm/
+  when: k14_helm_repo is defined
+
+- name: Generate helm manifest from chart
+  shell: |
+      helm template {{ k14_app }} {{ tmp_folder.path }}/chart/{{ k14_app }}/{{ k14_helm_path | default() }} \
+      -f {{ tmp_folder.path }}/ytt/{{ k14_helm_values }} \
+      -n {{ k14_app }} \
+      --include-crds \
+      --output-dir {{ tmp_folder.path }}/helm/
+  when: k14_helm_server is defined
 
 - name: register manifest files
   stat:

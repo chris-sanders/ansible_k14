@@ -1,0 +1,9 @@
+- name: Download chart
+  shell: |
+      helm fetch \
+      --destination {{ tmp_folder.path }}/chart/ \
+      --untar \
+      {% if k14_helm_version is defined %}
+      --versoin {{ k14_helm_version }}
+      {% endif %}
+      --repo {{ k14_helm_server }} 
