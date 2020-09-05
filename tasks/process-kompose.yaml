@@ -1,0 +1,25 @@
+- name: Move compose file to tmp folder
+  copy:
+    src: "{{ role_path }}/repos/{{ k14.app}}/{{ k14.kompose_file | default('docker-compose.yaml') }}"
+    dest: "{{ tmp_folder.path }}/kompose/"
+
+- name: Generate manifest via kompose
+  shell: 
+    cmd: kompose convert  
+    chdir: "{{ tmp_folder.path }}/kompose/"
+
+- name: Remove compose file
+  file: 
+    path: "{{ tmp_folder.path }}/kompose/{{ k14.kompose_file | default('docker-compose.yaml') }}"
+    state: absent
+  #shell: rm {{ tmp_folder.path }}/kompose/{{ k14.kompose_file | default('docker-compose.yaml') }}
+
+- name: register manifest files
+  stat:
+      path: "{{ manifest_item }}" 
+  register: k14_manifest_list
+  loop: "{{ query('filetree', '{{ tmp_folder.path }}/kompose/') }}"
+  loop_control:
+      label: "{{ manifest_item.path }}"
+      loop_var: "manifest_item"
+  when: " manifest_item.state == 'file' "

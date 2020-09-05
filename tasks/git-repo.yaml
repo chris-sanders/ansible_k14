@@ -1,0 +1,19 @@
+- name: Update git helm repo
+  local_action:
+    module: git
+    repo: "{{ k14.helm_repo }}"
+    dest: "{{ role_path }}/repos/{{ k14.app }}"
+    version: "{{ k14.helm_ref | default('HEAD') }}"
+  run_once: true
+  when: k14.helm_repo is defined
+  #register: chart_folder
+
+- name: Update git repo
+  local_action:
+    module: git
+    repo: "{{ k14.kompose_repo }}"
+    dest: "{{ role_path }}/repos/{{ k14.app }}"
+    version: "{{ k14.kompose_ref | default('HEAD') }}"
+  run_once: true
+  when: k14.kompose_repo is defined
+

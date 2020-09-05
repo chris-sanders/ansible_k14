@@ -1,6 +1,6 @@
 - name: Generate helm manifest from repo
   shell: |
-      helm template {{ k14.app }} {{ role_path }}/charts/{{ k14.app }}/{{ k14.helm_path | default() }} \
+      helm template {{ k14.app }} {{ role_path }}/repos/{{ k14.app }}/{{ k14.helm_path | default() }} \
       -f {{ tmp_folder.path }}/ytt/{{ k14_helm_values }} \
       -n {{ k14.app }} \
       --include-crds \

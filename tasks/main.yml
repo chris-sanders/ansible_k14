@@ -8,15 +8,16 @@
               - "{{ k14.app }}"
   tags: "{{ k14.app }}"
 
-- name: Pull {{ k14.app }} chart
+- name: Pull {{ k14.app }} repo
   include_role:
       name: k14
-      tasks_from: chart
+      tasks_from: git-repo
       apply:
           tags:
               - "{{ k14.app }}"
   tags: "{{ k14.app }}"
-  when: k14.helm_repo is defined
+  when: (k14.helm_repo is defined) or
+        (k14.kompose_repo is defined)
 
 - name: Download {{ k14.app }} chart
   include_role:
@@ -58,8 +59,8 @@
               - "{{ k14.app }}"
   tags: "{{ k14.app }}"
 
-# public - k14_manifest_list is used later and provided by the helm task
-- name: Generate {{ k14.app }} helm template
+# public - k14_manifest_list is used later
+- name: Generate {{ k14.app }} helm manifest
   include_role:
       name: k14
       tasks_from: process-helm
@@ -68,6 +69,20 @@
           tags:
               - "{{ k14.app }}"
   tags: "{{ k14.app }}"
+  when: (k14.helm_repo is defined) or
+        (k14.helm_server is defined)
+
+# public - k14_manifest_list is used later
+- name: Generate {{ k14.app }} kompose manifest
+  include_role:
+      name: k14
+      tasks_from: process-kompose
+      public: yes
+      apply:
+          tags:
+              - "{{ k14.app }}"
+  tags: "{{ k14.app }}"
+  when: k14.kompose_repo is defined
 
 - name: Apply {{ k14.app }} overlay
   include_role:
@@ -87,7 +102,7 @@
               - "{{ k14.app }}"
   tags: "{{ k14.app }}"
 
-- name: Setup {{ k14.app }} manifest folder
+- name: Setup {{ k14.app }} manifest folder permissions
   include_role:
       name: k14
       tasks_from: permissions
