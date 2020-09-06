@@ -5,8 +5,8 @@ sops -d secrets/secrets.yaml | \
 # Deploy with secrets
 {% endif %}
 kapp deploy -a {{ k14.app }} \
-{% if site_file_vars.kapp.namespace is defined: %}
--n {{ site_file_vars.kapp.namespace }} \
+{% if ytt.kapp.namespace is defined: %}
+-n {{ ytt.kapp.namespace }} \
 {% endif %}
 --into-ns {{ k14_app_namespace }} \
 -f manifest \
